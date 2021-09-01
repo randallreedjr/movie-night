@@ -1,0 +1,10 @@
+%h1 Movies#index
+%p Find me in app/views/movies/index.html.haml
+
+=form_with url: "/movies", method: :get do |form|
+  =form.label :query, "Search for:"
+  =form.text_field :query, value: params[:query]
+  =form.submit "Search"
+
+- if @movie
+  = @movie.to_s
