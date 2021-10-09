@@ -2,7 +2,8 @@ class MoviesController < ApplicationController
   def index
     @movies = Movie.all
     @search_results = []
-    if params[:query]
+    @query = params[:query]
+    if @query
       @search_results = MovieSearch.new.search(params[:query])
       @search_results.map! do |search_result|
         movie_attributes = {

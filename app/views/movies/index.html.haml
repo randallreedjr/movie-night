@@ -17,7 +17,7 @@
         =form.hidden_field :url, value: movie.url
         =form.hidden_field :image_url, value: movie.image_url
         =form.submit "Add"
-  - else
+  - elsif @query
     %p No results
 
 - if @movies
