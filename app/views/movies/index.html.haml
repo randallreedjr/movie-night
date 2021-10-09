@@ -1,10 +1,25 @@
-%h1 Movies#index
-%p Find me in app/views/movies/index.html.haml
+%h1 Movie List
 
+%h2 Movie Search
 =form_with url: "/movies", method: :get do |form|
   =form.label :query, "Search for:"
   =form.text_field :query, value: params[:query]
   =form.submit "Search"
 
-- if @movie
-  = @movie.to_s
+- if @search_results
+  - @search_results.each do |movie|
+    =link_to movie.to_s, movie.url
+    =image_tag(movie.image_url, class: "movie-poster")
+    =form_with model: movie do |form|
+      =form.hidden_field :title, value: movie.title
+      =form.hidden_field :year, value: movie.year
+      =form.hidden_field :url, value: movie.url
+      =form.hidden_field :image_url, value: movie.image_url
+      =form.submit "Add"
+
+- if @movies
+  %h2 My Movies
+  %ul
+    -@movies.each do |movie|
+      %li
+        = link_to movie.to_s, movie.url
