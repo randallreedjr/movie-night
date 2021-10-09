@@ -9,20 +9,10 @@ class MovieSearch
     response = Net::HTTP.get_response(uri)
     if response.is_a?(Net::HTTPSuccess)
       response_body = response.body
-      # remove everything up to first { and after last }
-      cleaned_response_body = response_body.match(/\{.*\}/).to_s
-      # 'd' is key for data
-      results = JSON.parse(cleaned_response_body)["d"]
-      # exclude unnecessary 'v'
-      new_results = results&.map {|r| r.except('v')}
-      # ensure results have images
-      image_results = new_results&.select {|r| r.has_key?('i')}
-      # only return films (exclude video games)
-      film_results = image_results&.select {|r| r['q'] == 'feature'}
-      # return empty array if no results
+      results = filter_results(response_body)
     end
-    return film_results || []
-    # return []
+    # return empty array if no results
+    return results || []
   end
 
   private
@@ -31,5 +21,19 @@ class MovieSearch
     text = CGI.escape(query.downcase)
     first_letter = text.first
     return URI("https://sg.media-imdb.com/suggests/#{first_letter}/#{text}.json")
+  end
+
+  def filter_results(response_body)
+    # remove everything up to first { and after last }
+    cleaned_response_body = response_body.match(/\{.*\}/).to_s
+    # 'd' is key for data
+    results = JSON.parse(cleaned_response_body)["d"]
+    # exclude unnecessary 'v'
+    new_results = results&.map {|r| r.except('v')}
+    # ensure results have images
+    image_results = new_results&.select {|r| r.has_key?('i')}
+    # only return films (exclude video games)
+    film_results = image_results&.select {|r| r['q'] == 'feature'}
+    return film_results
   end
 end
