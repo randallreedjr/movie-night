@@ -7,15 +7,18 @@
   =form.submit "Search"
 
 - if @search_results
-  - @search_results.each do |movie|
-    =link_to movie.to_s, movie.url
-    =image_tag(movie.image_url, class: "movie-poster")
-    =form_with model: movie do |form|
-      =form.hidden_field :title, value: movie.title
-      =form.hidden_field :year, value: movie.year
-      =form.hidden_field :url, value: movie.url
-      =form.hidden_field :image_url, value: movie.image_url
-      =form.submit "Add"
+  - if @search_results.any?
+    - @search_results.each do |movie|
+      =link_to movie.to_s, movie.url
+      =image_tag(movie.image_url, class: "movie-poster")
+      =form_with model: movie do |form|
+        =form.hidden_field :title, value: movie.title
+        =form.hidden_field :year, value: movie.year
+        =form.hidden_field :url, value: movie.url
+        =form.hidden_field :image_url, value: movie.image_url
+        =form.submit "Add"
+  - else
+    %p No results
 
 - if @movies
   %h2 My Movies

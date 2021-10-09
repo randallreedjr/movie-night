@@ -14,14 +14,15 @@ class MovieSearch
       # 'd' is key for data
       results = JSON.parse(cleaned_response_body)["d"]
       # exclude unnecessary 'v'
-      new_results = results.map {|r| r.except('v')}
+      new_results = results&.map {|r| r.except('v')}
       # ensure results have images
-      image_results = new_results.select {|r| r.has_key?('i')}
+      image_results = new_results&.select {|r| r.has_key?('i')}
       # only return films (exclude video games)
-      film_results = image_results.select {|r| r['q'] == 'feature'}
-      return film_results
+      film_results = image_results&.select {|r| r['q'] == 'feature'}
+      # return empty array if no results
     end
-    return {}
+    return film_results || []
+    # return []
   end
 
   private
