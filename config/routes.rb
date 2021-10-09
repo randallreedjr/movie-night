@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  root 'movies#index'
   # get 'movies/index'
   # get 'movies/create'
   # get 'movies/destroy'
